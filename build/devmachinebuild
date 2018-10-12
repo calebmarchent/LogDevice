@@ -1,0 +1,5 @@
+#!/usr/bin/sh
+
+PREFIX_PATH=$(pwd)/staging
+mkdir -p ${LOGDEVICE_STAGING_DIR}
+cmake  -DCMAKE_PREFIX_PATH=${LOGDEVICE_STAGING_DIR} ../logdevice/
