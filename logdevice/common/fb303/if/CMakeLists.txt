@@ -4,7 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-include_directories(${CMAKE_BINARY_DIR}})
+include_directories(${CMAKE_BINARY_DIR})
 
 set(_fb303_if_include_prefix "common/fb303/if")
 
