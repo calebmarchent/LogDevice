@@ -6,11 +6,10 @@
 
 include_directories(${CMAKE_BINARY_DIR})
 link_directories("${CMAKE_BINARY_DIR}/staging/usr/local/lib")
+link_directories("${CMAKE_BINARY_DIR}/fbthrift-prefix/src/fbthrift-build/lib/")
 
 set(_adminapi_if_include_prefix "logdevice/admin/if")
 set(_adminapi_binary_dir "${CMAKE_BINARY_DIR}/logdevice/admin/if")
-
-add_subdirectory(common/fb303/if)
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/${_adminapi_if_include_prefix})
 
@@ -68,6 +67,7 @@ ld_thrift_py3_library(
     "${CMAKE_BINARY_DIR}/logdevice/admin/gen-py3"
     "${CMAKE_BINARY_DIR}/logdevice"
     "${CMAKE_BINARY_DIR}/fbthrift-prefix/src/fbthrift-build/thrift/lib/py3/cybld"
+  THRIFT_INCLUDES "${CMAKE_SOURCE_DIR}"
 )
 if(thriftpy3)
   set_source_files_properties(

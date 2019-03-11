@@ -5,6 +5,8 @@
 # LICENSE file in the root directory of this source tree.
 
 include_directories(${CMAKE_BINARY_DIR})
+link_directories("${CMAKE_BINARY_DIR}/fbthrift-prefix/src/fbthrift-build/lib/"
+                 "${CMAKE_BINARY_DIR}/staging/usr/local/lib/")
 
 set(_fb303_if_include_prefix "common/fb303/if")
 

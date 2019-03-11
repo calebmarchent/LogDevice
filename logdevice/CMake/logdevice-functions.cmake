@@ -131,6 +131,7 @@ macro(ld_thrift_py3_library file_name services file_path output_path include_pre
   # Parse optional arguments
   set(_py3_namespace)
   set(_dependencies)
+  set(_thrift_include_directories)
   set(_cython_includes
     "-I${CMAKE_BINARY_DIR}/fbthrift-prefix/src/fbthrift-build/thrift/lib/py3/cybld"
   )
@@ -139,6 +140,8 @@ macro(ld_thrift_py3_library file_name services file_path output_path include_pre
   foreach(_arg ${ARGN})
     if ("${_arg}" STREQUAL "DEPENDS")
       set(_nextarg "DEPENDS")
+    elseif ("${_arg}" STREQUAL "THRIFT_INCLUDES")
+      set(_nextarg "THRIFT_INCLUDES")
     elseif ("${_arg}" STREQUAL "CYTHON_INCLUDES")
       set(_nextarg "CYTHON_INCLUDES")
     elseif ("${_arg}" STREQUAL "PY3_NAMESPACE")
@@ -146,6 +149,9 @@ macro(ld_thrift_py3_library file_name services file_path output_path include_pre
     else()
       if("${_nextarg}" STREQUAL "DEPENDS")
         list(APPEND _dependencies ${_arg})
+      elseif("${_nextarg}" STREQUAL "THRIFT_INCLUDES")
+        list(APPEND _thrift_include_directories "${_arg}")
+        list(APPEND _cython_includes "-I${_arg}")
       elseif("${_nextarg}" STREQUAL "CYTHON_INCLUDES")
         list(APPEND _cython_includes "-I${_arg}")
       elseif("${_nextarg}" STREQUAL "PY3_NAMESPACE")
@@ -166,6 +172,7 @@ macro(ld_thrift_py3_library file_name services file_path output_path include_pre
     "${file_path}"
     "${output_path}"
     "${include_prefix}"
+    THRIFT_INCLUDE_DIRECTORIES "${_thrift_include_directories}"
   )
 
   if(thriftpy3)
@@ -182,6 +189,7 @@ macro(ld_thrift_py3_library file_name services file_path output_path include_pre
       "${file_path}"
       "${output_path}"
       "${include_prefix}"
+      THRIFT_INCLUDE_DIRECTORIES "${_thrift_include_directories}"
     )
 
     # TODO: Why not read the py3_namespace from the thrift source file?

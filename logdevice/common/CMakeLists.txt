@@ -18,6 +18,9 @@ add_dependencies(common folly flatbuffers OpenTracing)
 set_target_properties(common
   PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
+# FB303 Thrift Interface
+add_subdirectory(fb303/if)
+
 # Tests
 file(GLOB test_hfiles "${LOGDEVICE_COMMON_DIR}/test/*.h")
 file(GLOB test_files "${LOGDEVICE_COMMON_DIR}/test/*.cpp")
