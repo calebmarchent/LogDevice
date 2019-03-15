@@ -33,4 +33,10 @@ set_target_properties(
 	NodesConfiguration-cpp2-obj
 	PROPERTIES POSITION_INDEPENDENT_CODE True
 )
-
+target_link_libraries(
+  NodesConfiguration-cpp2
+  Membership-cpp2
+  ${FBTHRIFT_LIBRARIES}
+  ${LIBGLOG_LIBRARY}
+  ${LIBGFLAGS_LIBRARY}
+)

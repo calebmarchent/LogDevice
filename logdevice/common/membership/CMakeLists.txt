@@ -32,3 +32,9 @@ set_target_properties(
 	Membership-cpp2-obj
 	PROPERTIES POSITION_INDEPENDENT_CODE True
 )
+target_link_libraries(
+  Membership-cpp2
+  ${FBTHRIFT_LIBRARIES}
+  ${LIBGLOG_LIBRARY}
+  ${LIBGFLAGS_LIBRARY}
+)
