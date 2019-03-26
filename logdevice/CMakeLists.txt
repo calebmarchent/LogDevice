@@ -51,13 +51,28 @@ if(${BUILD_SUBMODULES})
 else()
   find_package(RocksDB CONFIG REQUIRED)
   set(ROCKSDB_LIBRARIES RocksDB::rocksdb)
+  find_package(Gflags CONFIG REQUIRED)
+  find_package(Glog REQUIRED)
   find_package(folly CONFIG REQUIRED)
+  find_package(yarpl CONFIG)
+  find_package(rsocket CONFIG)
   find_package(fizz CONFIG REQUIRED)
   find_package(wangle CONFIG REQUIRED)
   find_package(FBThrift CONFIG REQUIRED)
   find_program(THRIFT1 thrift1)
   find_path(THRIFT_COMPILER_INCLUDE thrift/templates)
   set(THRIFT_TEMPLATES ${THRIFT_COMPILER_INCLUDE}/thrift/templates)
+  set(FBTHRIFT_LIBRARIES
+    FBThrift::protocol
+    FBThrift::thriftprotocol
+    FBThrift::transport
+    FBThrift::concurrency
+    FBThrift::thriftfrozen2
+    FBThrift::async
+    FBThrift::thrift-core
+    FBThrift::thriftcpp2
+    FBThrift::thrift
+  )
   include(${THRIFT_COMPILER_INCLUDE}/thrift/ThriftLibrary.cmake)
 
   # If we are not building the submodules, replace targets with fake targets so that
