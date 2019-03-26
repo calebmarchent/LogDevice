@@ -24,7 +24,7 @@ import distutils.spawn
 
 from fbcode_builder import FBCodeBuilder
 from shell_quoting import (
-    raw_shell, shell_comment, shell_join, ShellQuoted
+    raw_shell, shell_comment, shell_join, ShellQuoted, path_join
 )
 from utils import recursively_flatten_list
 
@@ -74,6 +74,33 @@ class ShellFBCodeBuilder(FBCodeBuilder):
             ),
         ]
 
+    def github_project_workdir(self, project, path):
+        # Only check out a non-default branch if requested. This especially
+        # makes sense when building from a local repo.
+        git_hash = self.option(
+            '{0}:git_hash'.format(project),
+            # Any repo that has a hash in deps/github_hashes defaults to
+            # that, with the goal of making builds maximally consistent.
+            self._github_hashes.get(project, '')
+        )
+        maybe_change_branch = [
+            self.run(ShellQuoted('git checkout {hash}').format(hash=git_hash)),
+        ] if git_hash else []
+
+        base_dir = self.option('projects_dir')
+
+        local_repo_dir = self.option('{0}:local_repo_dir'.format(project), '')
+        return self.step('Check out {0}, workdir {1}'.format(project, path), [
+            self.workdir(base_dir),
+            self.run(
+                ShellQuoted(
+                    'test -e {d} || git clone https://github.com/{p}').format(
+                        d=os.path.basename(project), p=project)
+            ) if not local_repo_dir else self.copy_local_repo(
+                local_repo_dir, os.path.basename(project)
+            ),
+            self.workdir(path_join(base_dir, os.path.basename(project), path)),
+        ] + maybe_change_branch)
 
 def find_project_root():
     here = os.path.dirname(os.path.realpath(__file__))
@@ -103,7 +130,7 @@ if __name__ == '__main__':
         builder.add_option('ccache_dir',
             os.environ.get('CCACHE_DIR', os.path.join(temp, '.ccache')))
     builder.add_option('prefix', os.path.join(temp, 'installed'))
-    builder.add_option('make_parallelism', 4)
+    builder.add_option('make_parallelism', "36")
     builder.add_option(
         '{project}:local_repo_dir'.format(project=config['github_project']),
         repo_root)
