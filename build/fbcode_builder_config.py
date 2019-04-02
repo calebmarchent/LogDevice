@@ -8,6 +8,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import specs.cython as cython
 import specs.fizz as fizz
 import specs.folly as folly
 import specs.rocksdb as rocksdb
@@ -38,15 +39,21 @@ Which outputs a legocastle job to stdout; to be fed into scutil create ...
 
 
 def fbcode_builder_spec(builder):
+    builder.add_option(
+        "facebook/folly:cmake_defines",
+        {"BUILD_SHARED_LIBS": "OFF", "BUILD_TESTS": "OFF", "PYTHON_EXTENSIONS": "ON"},
+    )
     # This API should change rarely, so build the latest tag instead of master.
     builder.add_option(
         "no1msd/mstch:git_hash", ShellQuoted("$(git describe --abbrev=0 --tags)")
     )
+    builder.add_option("fbthrift/thrift:cmake_defines", {"thriftpy3": "ON"})
     builder.add_option(
-        "LogDevice/logdevice/_build:cmake_defines", {"BUILD_SUBMODULES": "OFF"}
+        "LogDevice/logdevice/_build:cmake_defines",
+        {"BUILD_SUBMODULES": "OFF", "thriftpy3": "ON"},
     )
     return {
-        "depends_on": [rocksdb, folly, fizz, wangle, zstd],
+        "depends_on": [cython, rocksdb, folly, fizz, wangle, zstd],
         "steps": [
             # This isn't a separete spec, since only fbthrift uses mstch.
             builder.github_project_workdir("no1msd/mstch", "build"),
