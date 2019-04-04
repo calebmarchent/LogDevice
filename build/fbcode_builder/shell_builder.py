@@ -51,6 +51,10 @@ class ShellFBCodeBuilder(FBCodeBuilder):
     def setup(self):
         steps = [
             ShellQuoted('set -exo pipefail'),
+            ShellQuoted('python3 -m venv {}'.format(
+                os.path.join(self.option('projects_dir'), "venv"))),
+            ShellQuoted('source {}'.format(
+                os.path.join(self.option('projects_dir'), "venv", "bin" , "activate"))),
         ]
         if self.has_option('ccache_dir'):
             ccache_dir = self.option('ccache_dir')
@@ -103,7 +107,7 @@ if __name__ == '__main__':
         builder.add_option('ccache_dir',
             os.environ.get('CCACHE_DIR', os.path.join(temp, '.ccache')))
     builder.add_option('prefix', os.path.join(temp, 'installed'))
-    builder.add_option('make_parallelism', 4)
+    builder.add_option('make_parallelism', 36)
     builder.add_option(
         '{project}:local_repo_dir'.format(project=config['github_project']),
         repo_root)
