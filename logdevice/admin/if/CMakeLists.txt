@@ -24,7 +24,7 @@ set(_common_libs
   "settings-cpp2"
   "logtree-cpp2"
   "nodes-cpp2"
-  thriftcpp2_shared)
+  FBThrift::thriftcpp2_shared)
 
 foreach(THRIFT_SOURCE
         common
