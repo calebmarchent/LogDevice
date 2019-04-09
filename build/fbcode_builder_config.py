@@ -50,7 +50,7 @@ def fbcode_builder_spec(builder):
     builder.add_option("fbthrift/thrift:cmake_defines", {"thriftpy3": "ON"})
     builder.add_option(
         "LogDevice/logdevice/_build:cmake_defines",
-        {"BUILD_SUBMODULES": "OFF", "thriftpy3": "ON"},
+        {"BUILD_SUBMODULES": "OFF", "thriftpy3": "ON", "BUILD_TESTS": "OFF"},
     )
     return {
         "depends_on": [cython, rocksdb, folly, fizz, wangle, zstd],
